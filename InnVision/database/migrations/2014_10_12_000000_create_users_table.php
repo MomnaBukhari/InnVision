@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['admin', 'hotel_owner', 'customer'])->default('customer');
+            $table->boolean('is_approved')->default(false);
+            $table->string('admin_code')->nullable();
+            $table->string('hotel_name')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

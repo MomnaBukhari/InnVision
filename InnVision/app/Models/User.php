@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'is_approved',
     ];
 
     /**
@@ -41,5 +43,46 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_approved' => 'boolean',
     ];
+
+    /**
+     * Check if the user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is a hotel owner.
+     *
+     * @return bool
+     */
+    public function isHotelOwner()
+    {
+        return $this->role === 'hotel_owner';
+    }
+
+    /**
+     * Check if the user is a customer.
+     *
+     * @return bool
+     */
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
+    }
+
+    /**
+     * Check if the user is approved.
+     *
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return $this->is_approved;
+    }
 }
