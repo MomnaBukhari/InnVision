@@ -1,9 +1,9 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OwnerController;
 
 // Public Routes
 Route::get('/', function () {
@@ -33,11 +33,15 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [UserController::class, 'ViewAdminDashboard'])->name('admin.dashboard');
-    Route::get('/admin/manage-approvals', [AdminController::class, 'manageApprovals'])->name('admin.manage-approvals');
+    // Route::get('/admin/manage-approvals', [AdminController::class, 'manageApprovals'])->name('admin.manage-approvals');
+    Route::get('/admin/manage-approvals', [AdminController::class, 'manageApprovals'])->name('admin.manage-approvals'); // Added route for managing approvals
+    // Route::post('/admin/approve-user/{user}', [AdminController::class, 'approveUser'])->name('admin.approve-user'); // Added route for approving user
     Route::post('/approve-user/{user}', [AdminController::class, 'approveUser'])->name('approve.user');
-    // User management
+    Route::post('/disapprove-user/{user}', [AdminController::class, 'disapproveUser'])->name('disapprove.user');
     Route::get('/admin/users', [AdminController::class, 'viewUsers'])->name('admin.users');
     Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    Route::get('/admin/user/{user}', [AdminController::class, 'viewUser'])->name('admin.user.view');
+    Route::post('/reject-user/{user}', [AdminController::class, 'rejectUser'])->name('reject.user');
 });
 
 // Hotel Owner Routes
@@ -46,6 +50,9 @@ Route::middleware(['auth', 'role:hotel_owner', 'check.approval'])->group(functio
     Route::get('/owner/profile/edit', [UserController::class, 'editProfile'])->name('owner.profile.edit');
     Route::put('/owner/profile/update', [UserController::class, 'updateProfile'])->name('owner.profile.update');
     Route::delete('/owner/profile/delete', [UserController::class, 'deleteProfile'])->name('owner.profile.delete');
+    Route::get('/owner/pending-approval', [OwnerController::class, 'showPendingApproval'])->name('owner.pending-approval');
+    Route::post('/owner/request-approval', [OwnerController::class, 'requestApproval'])->name('owner.requestApproval');
+    Route::post('/owner/cancel-request', [OwnerController::class, 'cancelRequest'])->name('owner.cancelRequest');
 });
 
 // Customer Routes
@@ -60,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::delete('/profile/delete', [UserController::class, 'deleteProfile'])->name('profile.delete');
 });
 
 // Route for Pending Approval View

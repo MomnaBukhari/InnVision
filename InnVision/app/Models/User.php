@@ -23,6 +23,13 @@ class User extends Authenticatable
         'password',
         'role',
         'is_approved',
+        'request_send',
+        'contact_number',
+        'address',
+        'about',
+        'description',
+        'hotel_stars',
+        'service_class',
     ];
 
     /**
