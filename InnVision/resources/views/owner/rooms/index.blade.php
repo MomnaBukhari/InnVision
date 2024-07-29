@@ -7,7 +7,6 @@
         .table-container {
             padding: 20px;
             border-radius: 8px;
-
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
@@ -28,6 +27,7 @@
         th {
             background-color: #f4f4f4;
             font-weight: bold;
+            cursor: pointer;
         }
 
         tr:hover {
@@ -97,13 +97,20 @@
         </div>
         <div class="section1-part2">
             <div class="table-container">
-                {{-- <h1>Rooms</h1>
-                <a href="{{ route('owner.rooms.create') }}" class="btn btn-primary mb-3">Add New Room</a> --}}
+                <label for="sortOptions">Sort by:</label>
+                <select id="sortOptions">
+                    <option value="room_number">Room Number</option>
+                    <option value="branch">Branch</option>
+                    <option value="hotel">Hotel</option>
+                    <option value="status">Status</option>
+                    <option value="max_occupancy">Max Occupancy</option>
+                    <option value="single_beds">Single Beds</option>
+                </select>
 
                 @if ($rooms->isEmpty())
                     <p class="alert alert-warning">No rooms found.</p>
                 @else
-                    <table>
+                    <table id="roomsTable">
                         <thead>
                             <tr>
                                 <th>Room Number</th>
@@ -158,4 +165,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('sortOptions').addEventListener('change', function () {
+            sortTable(this.value);
+        });
+
+        function sortTable(sortBy) {
+            const table = document.getElementById('roomsTable');
+            const rows = Array.from(table.rows).slice(1); // Skip header row
+            let compare;
+
+            switch (sortBy) {
+                case 'room_number':
+                    compare = (a, b) => a.cells[0].innerText.localeCompare(b.cells[0].innerText);
+                    break;
+                case 'branch':
+                    compare = (a, b) => a.cells[7].innerText.localeCompare(b.cells[7].innerText);
+                    break;
+                case 'hotel':
+                    compare = (a, b) => a.cells[8].innerText.localeCompare(b.cells[8].innerText);
+                    break;
+                case 'status':
+                    compare = (a, b) => a.cells[1].innerText.localeCompare(b.cells[1].innerText);
+                    break;
+                case 'max_occupancy':
+                    compare = (a, b) => parseInt(a.cells[4].innerText) - parseInt(b.cells[4].innerText);
+                    break;
+                case 'single_beds':
+                    compare = (a, b) => parseInt(a.cells[5].innerText) - parseInt(b.cells[5].innerText);
+                    break;
+                default:
+                    return;
+            }
+
+            rows.sort(compare);
+            rows.forEach(row => table.appendChild(row));
+        }
+    </script>
 @endsection
