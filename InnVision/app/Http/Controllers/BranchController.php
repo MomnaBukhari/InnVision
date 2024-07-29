@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Hotel;
 use App\Models\Facility;
-use Illuminate\Support\Facades\Auth;
+
+
 
 class BranchController extends Controller
 {
 
-    public function index()
+
+
+    public function index() //method to display branches
     {
         $hotels = Hotel::where('owner_id', Auth::id())->get();
         $branches = Branch::whereIn('hotel_id', $hotels->pluck('id'))
-            ->with('facilities') // Eager load facilities
+            ->with('facilities') // Eager-load facilities
             ->get();
         return view('owner.branches.index', compact('branches'));
     }
 
 
-    public function create()
+
+
+    public function create() //method to display branches-create page
     {
         $hotels = Hotel::where('owner_id', Auth::id())->get();
         $staticFacilities = Facility::all();
         return view('owner.branches.create', compact('hotels', 'staticFacilities'));
     }
 
-    public function store(Request $request)
+
+
+
+    public function store(Request $request) //method to stroe branches to database
     {
         $request->validate([
             'hotel_id' => 'required|exists:hotels,id',
@@ -63,7 +72,11 @@ class BranchController extends Controller
         return redirect()->route('owner.branches.index')->with('success', 'Branch created successfully.');
     }
 
-    public function edit($id)
+
+
+
+
+    public function edit($id) //method to display edit-form for branches
     {
         // Find the branch by its ID
         $branch = Branch::findOrFail($id);
@@ -72,7 +85,11 @@ class BranchController extends Controller
         return view('owner.branches.edit', compact('branch', 'hotels', 'facilities'));
     }
 
-    public function update(Request $request, $id)
+
+
+
+
+    public function update(Request $request, $id) //method to update branches
     {
         $request->validate([
             'hotel_id' => 'required|exists:hotels,id',
@@ -98,7 +115,11 @@ class BranchController extends Controller
         return redirect()->route('owner.branches.index')->with('success', 'Branch updated successfully.');
     }
 
-    public function destroy($id)
+
+
+
+
+    public function destroy($id) //method to destroy branches
     {
         $branch = Branch::findOrFail($id);
         $branch->delete();

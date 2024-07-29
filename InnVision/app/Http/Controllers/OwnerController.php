@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use App\Models\User;
+
 
 class OwnerController extends Controller
 {
-    public function showPendingApproval()
+
+
+    public function showPendingApproval() //method to display approval status page
     {
         $user = Auth::user();
         return view('owner.pending-approval', compact('user'));
     }
 
-    public function requestApproval(Request $request)
+
+    public function requestApproval(Request $request) //method to request approval
     {
         $user = Auth::user();
         dd(123);
@@ -42,7 +46,9 @@ class OwnerController extends Controller
             return redirect()->route('owner.pending-approval')->with('error', 'Failed to submit approval request. Please try again.');
         }
     }
-    public function cancelRequest()
+
+
+    public function cancelRequest() //method to cancel sent request
     {
         $user = Auth::user();
         $user->request_send = false;
@@ -53,4 +59,7 @@ class OwnerController extends Controller
             return redirect()->route('owner.pending-approval')->with('error', 'Failed to cancel approval request. Please try again.');
         }
     }
+
+
+
 }

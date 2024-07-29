@@ -28,8 +28,8 @@ class RoomController extends Controller
     }
 
 
-    // Store a newly created room in storage
-    public function store(Request $request)
+
+    public function store(Request $request)   // method to Store a newly created room
     {
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
@@ -55,8 +55,8 @@ class RoomController extends Controller
     }
 
 
-    // Show the form for editing the specified room
-    public function edit(Room $room)
+
+    public function edit(Room $room)// Show the form for editing the room
     {
         $facilities = Facility::all();
         $customers = User::where('role', 'customer')->get();
@@ -64,8 +64,8 @@ class RoomController extends Controller
         return view('owner.rooms.edit', compact('room', 'branches', 'customers', 'facilities'));
     }
 
-    // Update the specified room in storage
-    public function update(Request $request, Room $room)
+
+    public function update(Request $request, Room $room) // Update the specified room
     {
         $request->validate([
             'branch_id' => 'required|exists:branches,id',
@@ -83,8 +83,8 @@ class RoomController extends Controller
         return redirect()->route('owner.rooms.index')->with('success', 'Room updated successfully.');
     }
 
-    // Remove the specified room from storage
-    public function destroy(Room $room)
+
+    public function destroy(Room $room) // Remove the specified room
     {
         $room->delete();
         return redirect()->route('owner.rooms.index')->with('success', 'Room deleted successfully.');
@@ -109,8 +109,8 @@ class RoomController extends Controller
         return redirect()->route('owner.rooms.index')->with('success', 'Room booked successfully.');
     }
 
-    // Mark a room as available
-    public function markAvailable(Room $room)
+
+    public function markAvailable(Room $room)  // method to mark a room as available
     {
         $room->update([
             'status' => 'available',

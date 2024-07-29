@@ -2,24 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Hotel;
-use Illuminate\Support\Facades\Auth;
+
+
 
 class HotelController extends Controller
 {
-    public function index()
+
+
+    public function index() //method to display hotels
     {
         $hotels = Hotel::where('owner_id', Auth::id())->get();
         return view('owner.hotels.index', compact('hotels'));
     }
 
-    public function create()
+
+
+
+    public function create() //method to display hotel-create page
     {
         return view('owner.hotels.create');
     }
 
-    public function store(Request $request)
+
+
+
+    public function store(Request $request) //method to stroe hotel to database
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -39,13 +49,19 @@ class HotelController extends Controller
         return redirect()->route('owner.hotels.index')->with('success', 'Hotel created successfully.');
     }
 
-  public function edit($id)
+
+
+
+    public function edit($id) //method to display edit-form for hotels
     {
         $hotel = Hotel::where('id', $id)->where('owner_id', Auth::id())->firstOrFail();
         return view('owner.hotels.edit', compact('hotel'));
     }
 
-    public function update(Request $request, $id)
+
+
+
+    public function update(Request $request, $id) //method to update hotels
     {
         $hotel = Hotel::where('id', $id)->where('owner_id', Auth::id())->firstOrFail();
 
@@ -66,10 +82,16 @@ class HotelController extends Controller
         return redirect()->route('owner.hotels.index')->with('success', 'Hotel updated successfully.');
     }
 
-    public function destroy($id)
+
+
+
+    public function destroy($id) //method to destroy hotels
     {
         $hotel = Hotel::where('id', $id)->where('owner_id', Auth::id())->firstOrFail();
         $hotel->delete();
         return redirect()->route('owner.hotels.index')->with('success', 'Hotel deleted successfully.');
     }
+
+
+
 }
