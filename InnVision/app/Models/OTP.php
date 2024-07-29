@@ -14,6 +14,6 @@ class OTP extends Model
         'otp',
     ];
 
-    // Optionally, if you want to define the table name explicitly
+    // I used this to define the table name explicitly
     protected $table = 'otps';
 }

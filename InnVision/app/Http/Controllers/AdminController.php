@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Mail\UserRejected;
 use App\Mail\UserApproved;
 use App\Models\User;
-
+use App\Models\Hotel;
+use App\Models\Branch;
 
 
 use Illuminate\Support\Facades\Mail;
@@ -31,8 +32,8 @@ class AdminController extends Controller
     public function approveUser(User $user) //this method will Help Admin to Approve Owners
     {
         $user->is_approved = true;
-        if($user->request_send==false){
-            $user->request_send=true;
+        if ($user->request_send == false) {
+            $user->request_send = true;
         }
         $user->save();
         Mail::to($user->email)->send(new UserApproved($user));
@@ -72,9 +73,9 @@ class AdminController extends Controller
 
 
 
-    public function viewUser($userId) //this method will Help Admin to View any User
+    public function viewUser($id) //this method will Help Admin to View any User
     {
-        $user = User::findOrFail($userId);
+        $user = User::with('hotels.branches.rooms')->findOrFail($id);
         return view('admin.user-view', compact('user'));
     }
 
@@ -88,6 +89,42 @@ class AdminController extends Controller
     }
 
 
+
+
+    public function viewOwnerHotels($userId)
+    {
+        $user = User::with('hotels.branches.rooms')->findOrFail($userId);
+        return view('admin.owner-hotels', compact('user'));
+    }
+
+
+
+    public function viewHotel($hotelId)
+    {
+        $hotel = Hotel::with('branches.rooms.bookedBy')->findOrFail($hotelId);
+        return view('admin.hotel-view', compact('hotel'));
+    }
+
+
+    public function deleteHotel($hotelId)
+    {
+        $hotel = Hotel::findOrFail($hotelId);
+        $hotel->delete();
+        return redirect()->back()->with('success', 'Hotel deleted successfully.');
+    }
+
+
+    public function deleteBranch($id)
+    {
+        // Find the branch by ID
+        $branch = Branch::findOrFail($id);
+
+        // Delete the branch
+        $branch->delete();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Branch deleted successfully.');
+    }
 
     // I will add new classes here if needed.
 

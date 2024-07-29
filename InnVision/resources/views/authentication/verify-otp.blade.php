@@ -5,6 +5,31 @@
 @endsection
 
 @section('pusherscript')
+<script>
+    function startCountdown(duration, display) {
+        var timer = duration, minutes, seconds;
+        var countdown = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(countdown);
+                window.location.href = "{{ route('login') }}"; // Redirect to login page after timeout
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        var countdownTime = 60; // 60 seconds countdown
+        var display = document.querySelector('#countdown');
+        startCountdown(countdownTime, display);
+    };
+</script>
 @endsection
 
 @section('section1')
@@ -12,12 +37,11 @@
         <div class="alert alert-danger">
             <ul>
                 Time Out - <a href="{{route('login')}}">Go back</a> and Re-try
-{{--                @foreach ($errors->all() as $error)--}}
-{{--                    <li>{{ $error }}</li>--}}
-{{--                @endforeach--}}
             </ul>
         </div>
     @endif
+
+    <div id="countdown" style="text-align: center; font-size: 1.5em; margin-bottom: 1rem;"></div>
 
     <form method="POST" action="{{ route('verify-otp') }}" class="form-container">
         @csrf
@@ -36,9 +60,6 @@
             max-width: 400px;
             margin: 0 auto;
             padding: 2% 0% 0% 0%;
-            /*background-color: #f9f9f9;*/
-            /*border-radius: 5px;*/
-            /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
         }
 
         .form-group {

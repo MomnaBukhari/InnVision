@@ -9,19 +9,27 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+
+
     public function ViewCustomerDashboard()
     {
         return view('customer.dashboard');
     }
+
+
     public function ViewOwnerDashboard()
     {
         return view('owner.dashboard');
     }
 
+
     public function ViewAdminDashboard()
     {
         return view('admin.dashboard');
     }
+
+
 
     public function showProfile()
     {
@@ -36,6 +44,9 @@ class UserController extends Controller
                 return view('customer.profile', compact('user'));
         }
     }
+
+
+
     public function editProfile()
     {
         $user = auth()->user();
@@ -51,48 +62,54 @@ class UserController extends Controller
         }
     }
 
+
+
     public function updateProfile(Request $request)
-{
-    \Log::info('Request Data:', $request->all());
+    {
+        \Log::info('Request Data:', $request->all());
 
-    $user = auth()->user();
+        $user = auth()->user();
 
-    $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-        'password' => 'nullable|string|min:8|confirmed',
-        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-        'contact_number' => 'nullable|string',
-        'address' => 'nullable|string|max:255',
-        'about' => 'nullable|string',
-    ];
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'contact_number' => 'nullable|string',
+            'address' => 'nullable|string|max:255',
+            'about' => 'nullable|string',
+        ];
 
-    $request->validate($rules);
+        $request->validate($rules);
 
-    \Log::info('Validated Data:', $request->all());
+        \Log::info('Validated Data:', $request->all());
 
-    // Proceed with the update logic
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->contact_number = $request->contact_number;
-    $user->address = $request->address;
-    $user->about = $request->about;
+        // Proceed with the update logic
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->contact_number = $request->contact_number;
+        $user->address = $request->address;
+        $user->about = $request->about;
 
-    if ($request->password) {
-        $user->password = Hash::make($request->password);
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
+        if ($request->hasFile('profile_picture')) {
+            $profilePicture = $request->file('profile_picture');
+            $profilePictureName = time() . '.' . $profilePicture->getClientOriginalExtension();
+            $profilePicture->move(public_path('images'), $profilePictureName);
+            $user->profile_picture = '/images/' . $profilePictureName;
+        }
+
+        $user->save();
+
+        return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
     }
 
-    if ($request->hasFile('profile_picture')) {
-        $profilePicture = $request->file('profile_picture');
-        $profilePictureName = time() . '.' . $profilePicture->getClientOriginalExtension();
-        $profilePicture->move(public_path('images'), $profilePictureName);
-        $user->profile_picture = '/images/' . $profilePictureName;
-    }
 
-    $user->save();
 
-    return redirect()->route('profile.show')->with('success', 'Profile updated successfully.');
-}
+
     public function deleteProfile()
     {
         $user = Auth::user();
@@ -104,4 +121,7 @@ class UserController extends Controller
 
         return redirect('/')->with('success', 'Your account has been deleted.');
     }
+
+
+    
 }

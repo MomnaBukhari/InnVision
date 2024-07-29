@@ -88,8 +88,15 @@ class User extends Authenticatable
      *
      * @return bool
      */
+
+    // This method is making is_approved true.
+
     public function isApproved()
     {
         return $this->is_approved;
+    }
+    public function hotels()
+    {
+        return $this->hasMany(Hotel::class, 'owner_id');
     }
 }

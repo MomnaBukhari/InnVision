@@ -46,6 +46,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/users/{user}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
     Route::get('/admin/user/{user}', [AdminController::class, 'viewUser'])->name('admin.user.view');
     Route::post('/reject-user/{user}', [AdminController::class, 'rejectUser'])->name('reject.user');
+
+    Route::get('admin/owners/{userId}/hotels', [AdminController::class, 'viewOwnerHotels'])->name('admin.viewOwnerHotels');
+    Route::get('admin/hotels/{hotelId}', [AdminController::class, 'viewHotel'])->name('admin.viewHotel');
+    Route::delete('admin/hotels/{hotelId}', [AdminController::class, 'deleteHotel'])->name('admin.deleteHotel');
+    Route::delete('/admin/branches/{id}', [AdminController::class, 'deleteBranch'])->name('admin.deleteBranch');
+
 });
 
 // Hotel Owner Routes

@@ -39,8 +39,6 @@
                 @else
                     <p><strong>About:</strong> <span class="notsetyet">Not Set Yet</span></p>
                 @endif
-
-                <!-- Add any other profile information you want to display -->
             </div>
         </div>
     </div>

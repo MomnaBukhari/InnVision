@@ -17,12 +17,23 @@ class Hotel extends Model
         'stars',
     ];
 
+
+
+    // Relations
+
+
+    // Relation between Users(Owners) and Hotels
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+
+    // Relation between Branches and Hotels
     public function branches()
     {
         return $this->hasMany(Branch::class);
     }
+
+
 }
