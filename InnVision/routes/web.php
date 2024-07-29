@@ -4,6 +4,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\HotelController;
+use App\Http\Controllers\BranchController;
+
 
 // Public Routes
 Route::get('/', function () {
@@ -53,6 +56,19 @@ Route::middleware(['auth', 'role:hotel_owner', 'check.approval'])->group(functio
     Route::get('/owner/pending-approval', [OwnerController::class, 'showPendingApproval'])->name('owner.pending-approval');
     Route::post('/owner/request-approval', [OwnerController::class, 'requestApproval'])->name('owner.requestApproval');
     Route::post('/owner/cancel-request', [OwnerController::class, 'cancelRequest'])->name('owner.cancelRequest');
+    Route::get('owner/hotels', [HotelController::class, 'index'])->name('owner.hotels.index');
+    Route::get('owner/hotels/create', [HotelController::class, 'create'])->name('owner.hotels.create');
+    Route::post('owner/hotels', [HotelController::class, 'store'])->name('owner.hotels.store');
+    Route::get('owner/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('owner.hotels.edit');
+    Route::put('owner/hotels/{hotel}', [HotelController::class, 'update'])->name('owner.hotels.update');
+    Route::delete('owner/hotels/{hotel}', [HotelController::class, 'destroy'])->name('owner.hotels.destroy');
+    // branches
+    Route::get('owner/branches', [BranchController::class, 'index'])->name('owner.branches.index');
+    Route::get('owner/branches/create', [BranchController::class, 'create'])->name('owner.branches.create');
+    Route::post('owner/branches', [BranchController::class, 'store'])->name('owner.branches.store');
+    Route::get('owner/branches/{branch}/edit', [BranchController::class, 'edit'])->name('owner.branches.edit');
+    Route::put('owner/branches/{branch}', [BranchController::class, 'update'])->name('owner.branches.update');
+    Route::delete('owner/branches/{branch}', [BranchController::class, 'destroy'])->name('owner.branches.destroy');
 });
 
 // Customer Routes

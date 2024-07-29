@@ -19,6 +19,8 @@
         <div class="innernav2">
             <a href="{{route('owner.dashboard')}}">Dashboard</a>
             <a href="{{route('profile.show')}}">Profile</a>
+            <a href="{{route('owner.hotels.index')}}">Hotels</a>
+            <a href="{{route('owner.branches.index')}}">Branches</a>
             <a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

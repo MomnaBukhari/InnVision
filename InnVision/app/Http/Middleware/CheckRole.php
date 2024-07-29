@@ -24,7 +24,7 @@ class CheckRole
         $user = Auth::user();
 
         if ($user->role !== $role) {
-            return redirect('home'); // or any other appropriate response
+            return redirect('home'); 
         }
 
         return $next($request);
