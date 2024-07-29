@@ -23,7 +23,6 @@ class BranchController extends Controller
 
     public function create()
     {
-        // Get all hotels and facilities
         $hotels = Hotel::where('owner_id', Auth::id())->get();
         $staticFacilities = Facility::all();
         return view('owner.branches.create', compact('hotels', 'staticFacilities'));
@@ -45,7 +44,6 @@ class BranchController extends Controller
         $facilities = $request->input('facilities', []);
         $customFacilities = $request->input('custom_facilities', []);
 
-        // Handle custom facilities
         foreach ($customFacilities as $customFacility) {
             $facility = Facility::firstOrCreate(['name' => $customFacility]);
             $facilities[] = $facility->id;
@@ -69,7 +67,6 @@ class BranchController extends Controller
     {
         // Find the branch by its ID
         $branch = Branch::findOrFail($id);
-        // Get all hotels and facilities
         $hotels = Hotel::where('owner_id', Auth::id())->get();
         $facilities = Facility::all();
         return view('owner.branches.edit', compact('branch', 'hotels', 'facilities'));

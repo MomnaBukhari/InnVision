@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\RoomController;
 
 
 // Public Routes
@@ -69,6 +70,17 @@ Route::middleware(['auth', 'role:hotel_owner', 'check.approval'])->group(functio
     Route::get('owner/branches/{branch}/edit', [BranchController::class, 'edit'])->name('owner.branches.edit');
     Route::put('owner/branches/{branch}', [BranchController::class, 'update'])->name('owner.branches.update');
     Route::delete('owner/branches/{branch}', [BranchController::class, 'destroy'])->name('owner.branches.destroy');
+    // Rooms
+    Route::prefix('owner/rooms')->name('owner.rooms.')->group(function () {
+        Route::get('/', [RoomController::class, 'index'])->name('index');
+        Route::get('/create', [RoomController::class, 'create'])->name('create');
+        Route::post('/', [RoomController::class, 'store'])->name('store');
+        Route::get('/{room}/edit', [RoomController::class, 'edit'])->name('edit');
+        Route::put('/{room}', [RoomController::class, 'update'])->name('update');
+        Route::delete('/{room}', [RoomController::class, 'destroy'])->name('destroy');
+        Route::post('/{room}/book', [RoomController::class, 'book'])->name('book'); // Optional
+        Route::post('/{room}/mark-available', [RoomController::class, 'markAvailable'])->name('markAvailable'); // Optional
+    });
 });
 
 // Customer Routes

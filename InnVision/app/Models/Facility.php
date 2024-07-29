@@ -14,4 +14,8 @@ class Facility extends Model
     {
         return $this->belongsToMany(Branch::class);
     }
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class, 'room_facilities');
+    }
 }
