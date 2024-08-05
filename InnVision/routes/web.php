@@ -9,6 +9,8 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\StripeWebhookController;
 
 // Public Routes
 Route::get('/', function () {
@@ -106,9 +108,15 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
         Route::get('/my-bookings', [CustomerController::class, 'myBookings'])->name('my_bookings');
     });
 
-Route::get('book/{room}', [BookingController::class, 'showBookingForm'])->name('book.form');
-Route::post('book/{room}', [BookingController::class, 'bookRoom'])->name('book.room');
+    Route::get('book/{room}', [BookingController::class, 'showBookingForm'])->name('book.form');
+    Route::post('book/{room}', [BookingController::class, 'bookRoom'])->name('book.room');
 
+    Route::post('create-checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('create-checkout-session');
+Route::get('payment-success/{booking_id}', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('payment-cancel', [PaymentController::class, 'paymentCancel'])->name('payment.cancel');
+
+Route::get('book-room/{room}', [BookingController::class, 'showBookingForm']);
+Route::post('book-room/{room}', [BookingController::class, 'bookRoom']);
 
 });
 

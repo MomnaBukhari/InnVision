@@ -1,6 +1,7 @@
 <?php
 
 // app/Http/Controllers/BookingController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -13,7 +14,6 @@ class BookingController extends Controller
 {
     public function showBookingForm(Room $room)
     {
-        // Pass the room data to the view
         return view('customer.book', compact('room'));
     }
 
@@ -25,11 +25,8 @@ class BookingController extends Controller
         ]);
 
         $user = Auth::user();
-
-        // Calculate the total price
         $totalPrice = $request->duration_days * $room->fare;
 
-        // Create the booking
         $booking = Booking::create([
             'user_id' => $user->id,
             'room_id' => $room->id,
@@ -38,13 +35,10 @@ class BookingController extends Controller
             'total_price' => $totalPrice,
         ]);
 
-        // Mark the room as booked
         $room->update(['is_booked' => true]);
 
         return view('customer.booking-confirmation', [
             'booking' => $booking
         ]);
     }
-
-
 }
