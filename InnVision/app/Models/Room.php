@@ -11,13 +11,15 @@ class Room extends Model
     protected $fillable = [
         'branch_id',
         'room_number',
-        'status',
-        'booked_by',
+        'is_booked',
+        'customer_id',
         'floor',
         'max_occupancy',
         'single_beds',
+        'fare',
         'description'
     ];
+
 
 
     // Relations
@@ -40,7 +42,6 @@ class Room extends Model
     // Defining to see Who booked room
     public function bookedBy()
     {
-        return $this->belongsTo(User::class, 'booked_by');
+        return $this->belongsTo(User::class, 'customer_id');
     }
-
 }

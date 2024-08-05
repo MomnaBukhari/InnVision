@@ -103,8 +103,10 @@
                     <option value="branch">Branch</option>
                     <option value="hotel">Hotel</option>
                     <option value="status">Status</option>
-                    <option value="max_occupancy">Max Occupancy</option>
+                    <option value="max_occupancy">Occupancy: Low to High</option>
                     <option value="single_beds">Single Beds</option>
+                    <option value="fare_asc">Fare: Low to High</option>
+                    <option value="fare_desc">Fare: High to Low</option>
                 </select>
 
                 @if ($rooms->isEmpty())
@@ -119,6 +121,7 @@
                                 <th>Floor</th>
                                 <th>Max Occupancy</th>
                                 <th>Single Beds</th>
+                                <th>Fare</th>
                                 <th>Description</th>
                                 <th>Branch</th>
                                 <th>Hotel</th>
@@ -131,18 +134,21 @@
                                 <tr>
                                     <td>{{ $room->room_number }}</td>
                                     <td>
-                                        <span
-                                            class="badge {{ $room->status === 'available' ? 'badge-info' : 'badge-secondary' }}">
-                                            {{ ucfirst($room->status) }}
+                                        <span class="badge {{ $room->is_booked ? 'badge-secondary' : 'badge-info' }}">
+                                            {{ $room->is_booked ? 'Booked' : 'Available' }}
                                         </span>
                                     </td>
-                                    <td>{{ $room->status === 'booked' ? $room->bookedBy->name : 'Nobody' }}</td>
+                                    <td>
+                                        {{ $room->is_booked ? ($room->bookedBy ? $room->bookedBy->name : 'Nobody') : 'Nobody' }}
+                                    </td>
                                     <td>{{ $room->floor }}</td>
                                     <td>{{ $room->max_occupancy }}</td>
                                     <td>{{ $room->single_beds }}</td>
+                                    <td>{{ $room->fare }}</td>
                                     <td>{{ $room->description }}</td>
-                                    <td>{{ $room->branch->name }}</td>
-                                    <td>{{ $room->branch->hotel->name }}</td>
+                                    <td>{{ $room->branch ? $room->branch->name : 'No Branch' }}</td>
+                                    <td>{{ $room->branch && $room->branch->hotel ? $room->branch->hotel->name : 'No Hotel' }}
+                                    </td>
                                     <td>
                                         @foreach ($room->facilities as $facility)
                                             <span class="badge badge-info">{{ $facility->name }}</span>
@@ -159,6 +165,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+
                         </tbody>
                     </table>
                 @endif
@@ -167,7 +174,7 @@
     </div>
 
     <script>
-        document.getElementById('sortOptions').addEventListener('change', function () {
+        document.getElementById('sortOptions').addEventListener('change', function() {
             sortTable(this.value);
         });
 
@@ -194,6 +201,12 @@
                     break;
                 case 'single_beds':
                     compare = (a, b) => parseInt(a.cells[5].innerText) - parseInt(b.cells[5].innerText);
+                    break;
+                case 'fare_asc':
+                    compare = (a, b) => parseFloat(a.cells[6].innerText) - parseFloat(b.cells[6].innerText);
+                    break;
+                case 'fare_desc':
+                    compare = (a, b) => parseFloat(b.cells[6].innerText) - parseFloat(a.cells[6].innerText);
                     break;
                 default:
                     return;

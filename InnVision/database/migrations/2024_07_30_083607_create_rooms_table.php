@@ -14,14 +14,19 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('branch_id')->constrained()->onDelete('cascade');
-            $table->string('room_number')->unique();
-            $table->enum('status', ['available', 'booked'])->default('available');
-            $table->string('booked_by')->nullable(); // Could be a user ID or name
-            $table->integer('floor');
+            $table->string('room_number');
+            $table->boolean('is_booked')->default(false); 
+            $table->foreignId('customer_id')->nullable()->constrained('users')->onDelete('set null');
             $table->integer('max_occupancy');
             $table->integer('single_beds')->default(0);
-            $table->text('description')->nullable(); // Additional details about the room
+            $table->integer('floor');
+            $table->decimal('fare', 8, 2);
+            $table->text('description')->nullable();
             $table->timestamps();
+
+            if (!Schema::hasColumn('rooms', 'branch_id')) {
+                $table->unique(['branch_id', 'room_number']); // Composite unique constraint
+            }
         });
     }
 

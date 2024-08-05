@@ -37,12 +37,12 @@ class BranchController extends Controller
 
 
 
-    public function store(Request $request) //method to stroe branches to database
+    public function store(Request $request)
     {
-        $request->validate([
-            'hotel_id' => 'required|exists:hotels,id',
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
+            'hotel_id' => 'required|exists:hotels,id',
+            'address' => 'nullable|string',
             'is_main' => 'required|boolean',
             'facilities' => 'nullable|array',
             'facilities.*' => 'exists:facilities,id',
@@ -59,15 +59,14 @@ class BranchController extends Controller
         }
 
         $branch = Branch::create([
-            'hotel_id' => $request->hotel_id,
-            'name' => $request->name,
-            'address' => $request->address,
-            'is_main' => $request->is_main,
+            'name' => $validated['name'],
+            'hotel_id' => $validated['hotel_id'],
+            'address' => $validated['address'],
+            'is_main' => $validated['is_main'],
+            'owner_id' => auth()->user()->id,  // Ensure the owner_id is set
         ]);
 
-        if (!empty($facilities)) {
-            $branch->facilities()->sync($facilities);
-        }
+        $branch->facilities()->sync($facilities);
 
         return redirect()->route('owner.branches.index')->with('success', 'Branch created successfully.');
     }
@@ -125,4 +124,8 @@ class BranchController extends Controller
         $branch->delete();
         return redirect()->route('owner.branches.index')->with('success', 'Branch deleted successfully.');
     }
+
+
+
+
 }

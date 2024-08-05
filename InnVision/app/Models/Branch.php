@@ -15,6 +15,7 @@ class Branch extends Model
         'name',
         'is_main',
         'address',
+        'owner_id',
     ];
 
     // Inverse Relation of 'One Hotel have Multiple Branches' that I have defined in Hotel Model.

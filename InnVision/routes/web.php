@@ -7,7 +7,8 @@ use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\RoomController;
-
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\BookingController;
 
 // Public Routes
 Route::get('/', function () {
@@ -86,7 +87,11 @@ Route::middleware(['auth', 'role:hotel_owner', 'check.approval'])->group(functio
         Route::delete('/{room}', [RoomController::class, 'destroy'])->name('destroy');
         Route::post('/{room}/book', [RoomController::class, 'book'])->name('book'); // Optional
         Route::post('/{room}/mark-available', [RoomController::class, 'markAvailable'])->name('markAvailable'); // Optional
+        // Route::get('/hotels/{hotel}/branches', [BranchController::class, 'getBranches'])->name('hotels.branches');
+        // Route::get('/hotels/{hotelId}/branches', [RoomController::class, 'getBranches']);
     });
+    Route::get('/owner/hotels/{hotelId}/branches', [RoomController::class, 'getBranchesByHotel']);
+
 });
 
 // Customer Routes
@@ -94,6 +99,17 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/customer/dashboard', [UserController::class, 'ViewCustomerDashboard'])->name('customer.dashboard');
     Route::get('/customer/profile/edit', [UserController::class, 'editProfile'])->name('customer.profile.edit');
     Route::put('/customer/profile/update', [UserController::class, 'updateProfile'])->name('customer.profile.update');
+    Route::prefix('customer')->name('customer.')->group(function () {
+        Route::get('/hotels', [CustomerController::class, 'index'])->name('hotels.index');
+        Route::get('/hotel/{id}', [CustomerController::class, 'showHotel'])->name('hotel.show');
+        Route::get('/branch/{id}', [CustomerController::class, 'showBranch'])->name('branch.show');
+        Route::get('/my-bookings', [CustomerController::class, 'myBookings'])->name('my_bookings');
+    });
+
+Route::get('book/{room}', [BookingController::class, 'showBookingForm'])->name('book.form');
+Route::post('book/{room}', [BookingController::class, 'bookRoom'])->name('book.room');
+
+
 });
 
 // Common Profile Routes

@@ -103,40 +103,34 @@
             </div>
 
             @if ($user->role === 'hotel_owner')
-                <div class="table-container">
-                    <h2>Hotels</h2>
-                    @foreach ($user->hotels as $hotel)
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Hotel Name</th>
-                                    <th>Number of Branches</th>
-                                    @if ($hotel->rooms && $hotel->rooms->isNotEmpty())
-                                        <th>Number of Rooms</th>
-                                    @endif
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ $hotel->name }}</td>
-                                    <td>{{ $hotel->branches->count() }}</td>
-                                    @if ($hotel->rooms && $hotel->rooms->isNotEmpty())
-                                        <td>{{ $hotel->rooms->count() }}</td>
-                                    @endif
-                                    <td>
-                                        <a href="{{ route('admin.viewHotel', $hotel->id) }}" class="btn btn-primary">View</a>
-                                        <form action="{{ route('admin.deleteHotel', $hotel->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    @endforeach
-                </div>
+            <div class="table-container">
+                <h2>Hotels of {{ $user->name }}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hotel Name</th>
+                            <th>Number of Branches</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($user->hotels as $hotel)
+                            <tr>
+                                <td>{{ $hotel->name }}</td>
+                                <td>{{ $hotel->branches->count() }}</td>
+                                <td>
+                                    <a href="{{ route('admin.viewHotel', $hotel->id) }}" class="btn btn-primary">View</a>
+                                    <form action="{{ route('admin.deleteHotel', $hotel->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
             @endif
         </div>
     </div>

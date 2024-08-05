@@ -35,5 +35,9 @@ class Hotel extends Model
         return $this->hasMany(Branch::class);
     }
 
-
+    public function getBranchesCountAttribute()
+    {
+        return $this->branches()->count();
+    }
+    
 }

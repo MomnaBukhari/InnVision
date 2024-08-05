@@ -21,7 +21,7 @@ class OwnerController extends Controller
     public function requestApproval(Request $request) //method to request approval
     {
         $user = Auth::user();
-        dd(123);
+        // dd(123);
 
         $request->validate([
             'contact_number' => 'required|string',
@@ -59,7 +59,4 @@ class OwnerController extends Controller
             return redirect()->route('owner.pending-approval')->with('error', 'Failed to cancel approval request. Please try again.');
         }
     }
-
-
-
 }

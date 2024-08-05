@@ -8,6 +8,7 @@
     <title>@yield('title') - InnVision</title>
     <link rel="favicon" link="/favicon.ico">
     <link rel="stylesheet" href="./stylesheets/style.css">
+    
     @yield('style')
     @yield('pusherscript')
 </head>
