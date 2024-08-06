@@ -16,6 +16,7 @@ class BookingController extends Controller
     {
         return view('customer.book', compact('room'));
     }
+    
 
     public function bookRoom(Request $request, Room $room)
     {

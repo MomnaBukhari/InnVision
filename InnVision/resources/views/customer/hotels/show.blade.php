@@ -48,6 +48,8 @@
                         @endforeach
                     </div>
                     <a href="{{ route('customer.branch.show', $branch->id) }}" class="btn btn-primary mt-2">View Rooms</a>
+                    <a href="{{ route('weather.show', $branch->id) }}" class="btn btn-secondary mt-2">See Weather Conditions</a>
+
                 </li>
             @endforeach
         </ul>

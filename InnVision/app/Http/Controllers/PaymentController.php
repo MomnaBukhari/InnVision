@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 use App\Models\Booking;
+use App\Models\Room;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -36,11 +38,27 @@ class PaymentController extends Controller
 
     public function paymentSuccess($booking_id)
     {
+        // Find the booking by its ID
         $booking = Booking::findOrFail($booking_id);
-        // Mark the room as confirmed, or perform other actions as needed
-        return view('customer.payment-success', compact('booking'));
-    }
 
+        // Find the associated room
+        $room = Room::findOrFail($booking->room_id);
+
+        // Check if the room is already booked
+        if (!$room->is_booked) {
+            $room->update(['is_booked' => true]);
+        }
+
+        // Get the user who made the booking
+        $user = Auth::user();
+
+        // Pass booking, room, and user data to the view
+        return view('customer.payment-success', [
+            'booking' => $booking,
+            'room' => $room,
+            'user' => $user,
+        ]);
+    }
     public function paymentCancel()
     {
         return view('customer.payment-cancel');

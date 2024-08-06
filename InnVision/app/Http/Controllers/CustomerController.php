@@ -8,6 +8,8 @@ use App\Models\Hotel;
 use App\Models\Branch;
 use App\Models\Facility;
 use App\Models\Room;
+use App\Models\Booking;
+
 
 class CustomerController extends Controller
 {
@@ -61,7 +63,7 @@ class CustomerController extends Controller
         }
 
         if ($request->has('facility')) {
-            $query->whereHas('facilities', function($q) use ($request) {
+            $query->whereHas('facilities', function ($q) use ($request) {
                 $q->where('name', $request->input('facility'));
             });
         }
@@ -105,14 +107,21 @@ class CustomerController extends Controller
     }
 
 
+    // public function myBookings()
+    // {
+    //     $userId = Auth::id();
+
+    //     // Retrieve rooms where the customer_id matches the authenticated user's ID
+    //     $rooms = Room::where('customer_id', $userId)->with(['branch.hotel', 'facilities'])->get();
+
+    //     return view('customer.rooms.my_bookings', compact('rooms'));
+    // }
     public function myBookings()
     {
         $userId = Auth::id();
-
-        // Retrieve rooms where the customer_id matches the authenticated user's ID
-        $rooms = Room::where('customer_id', $userId)->with(['branch.hotel', 'facilities'])->get();
-
-        return view('customer.rooms.my_bookings', compact('rooms'));
+        $bookings = Booking::where('user_id', $userId)->with(['room.branch.hotel'])->get();
+        return view('customer.rooms.my_bookings', compact('bookings'));
     }
+
 
 }

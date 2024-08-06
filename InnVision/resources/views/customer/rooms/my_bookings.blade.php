@@ -10,7 +10,7 @@
     <div class="container mt-5">
         <h1>My Bookings</h1>
 
-        @if ($rooms->isEmpty())
+        @if ($bookings->isEmpty())
             <div class="alert alert-warning" role="alert">
                 You have not booked any rooms yet.
             </div>
@@ -26,11 +26,18 @@
                         <th>Fare</th>
                         <th>Branch</th>
                         <th>Hotel</th>
-                        <th>Facilities</th>
+                        <th>Booking Start Date</th>
+                        <th>Duration (Days)</th>
+                        <th>Total Price</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($rooms as $room)
+                    @foreach ($bookings as $booking)
+                        @php
+                            $room = $booking->room;
+                            $branch = $room->branch;
+                            $hotel = $branch->hotel;
+                        @endphp
                         <tr>
                             <td>{{ $room->room_number }}</td>
                             <td>{{ $room->description }}</td>
@@ -38,13 +45,11 @@
                             <td>{{ $room->single_beds }}</td>
                             <td>{{ $room->floor }}</td>
                             <td>{{ $room->fare }}</td>
-                            <td>{{ $room->branch->name }}</td>
-                            <td>{{ $room->branch->hotel->name }}</td>
-                            <td>
-                                @foreach ($room->facilities as $facility)
-                                    <span class="badge badge-info">{{ $facility->name }}</span>
-                                @endforeach
-                            </td>
+                            <td>{{ $branch->name }}</td>
+                            <td>{{ $hotel->name }}</td>
+                            <td>{{ $booking->start_date->format('Y-m-d') }}</td>
+                            <td>{{ $booking->duration_days }}</td>
+                            <td>${{ $booking->total_price }}</td>
                         </tr>
                     @endforeach
                 </tbody>

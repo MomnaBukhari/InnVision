@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
-
     public function index()
     {
         $userId = Auth::id();
@@ -20,7 +19,7 @@ class RoomController extends Controller
         // Retrieve rooms where the branch's owner_id matches the authenticated user's ID
         $rooms = Room::whereHas('branch', function ($query) use ($userId) {
             $query->where('owner_id', $userId);
-        })->with(['branch.hotel', 'facilities', 'bookedBy'])->get();
+        })->with(['branch.hotel', 'facilities', 'currentBooking', 'bookedBy'])->get();
 
         return view('owner.rooms.index', compact('rooms'));
     }
@@ -92,6 +91,8 @@ class RoomController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|string|in:available,booked',
             'booked_by' => 'nullable|exists:users,id',
+            'facilities' => 'array',
+            'facilities.*' => 'exists:facilities,id',
         ]);
 
         $roomData = $request->except('facilities');
@@ -102,11 +103,17 @@ class RoomController extends Controller
 
         if ($request->has('facilities')) {
             $room->facilities()->sync($request->facilities);
+        } else {
+            $room->facilities()->detach(); // Remove all facilities if none selected
+        }
+
+        // Clear bookings if the room is marked as available
+        if (!$room->is_booked) {
+            $room->bookings()->delete();
         }
 
         return redirect()->route('owner.rooms.index')->with('success', 'Room updated successfully.');
     }
-
 
     public function destroy(Room $room) // Remove the specified room
     {
@@ -141,14 +148,17 @@ class RoomController extends Controller
 
 
 
-    public function markAvailable(Room $room)  // method to mark a room as available
-    {
-        $room->update([
-            'is_booked' => false,
-            'customer_id' => null,
-        ]);
+    public function markAvailable(Room $room)
+{
+    $room->update([
+        'is_booked' => false,
+        'customer_id' => null,
+    ]);
 
-        return redirect()->route('owner.rooms.index')->with('success', 'Room marked as available.');
-    }
+    // Remove bookings when marking as available
+    $room->bookings()->delete();
+
+    return redirect()->route('owner.rooms.index')->with('success', 'Room marked as available.');
+}
 
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\WeatherController;
 
 // Public Routes
 Route::get('/', function () {
@@ -117,6 +118,8 @@ Route::get('payment-cancel', [PaymentController::class, 'paymentCancel'])->name(
 
 Route::get('book-room/{room}', [BookingController::class, 'showBookingForm']);
 Route::post('book-room/{room}', [BookingController::class, 'bookRoom']);
+Route::get('/branch/{branch}/weather', [WeatherController::class, 'showWeather'])->name('weather.show');
+
 
 });
 

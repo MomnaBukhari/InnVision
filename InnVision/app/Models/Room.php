@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Room extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'branch_id',
         'room_number',
@@ -20,28 +21,41 @@ class Room extends Model
         'description'
     ];
 
-
-
     // Relations
 
-
-    // Making relation as one room belongs to one branch
+    // Room belongs to one branch
     public function branch()
     {
         return $this->belongsTo(Branch::class);
     }
 
-
-    // Making many to many relation with facilities,  room_facilities is table name that is pivot table
+    // Many-to-many relation with facilities
     public function facilities()
     {
         return $this->belongsToMany(Facility::class, 'room_facilities');
     }
 
+    // Room can have many bookings
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
-    // Defining to see Who booked room
+    // Define the current booking (latest one)
+    public function currentBooking()
+    {
+        return $this->hasOne(Booking::class)->latestOfMany();
+    }
+
+    // Get the user who booked the room (if any)
     public function bookedBy()
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->hasOneThrough(User::class, Booking::class, 'room_id', 'id', 'id', 'user_id');
+    }
+
+    // Check if the room is currently booked
+    public function isBooked()
+    {
+        return $this->currentBooking()->exists();
     }
 }

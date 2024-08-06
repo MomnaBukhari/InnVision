@@ -87,6 +87,14 @@
             border-radius: 5px;
             border: 1px solid #ffeeba;
         }
+
+        .booked-by-info {
+            display: none;
+        }
+
+        .status-cell {
+            cursor: pointer;
+        }
     </style>
 @endsection
 
@@ -133,13 +141,13 @@
                             @foreach ($rooms as $room)
                                 <tr>
                                     <td>{{ $room->room_number }}</td>
-                                    <td>
+                                    <td class="status-cell" data-room-id="{{ $room->id }}">
                                         <span class="badge {{ $room->is_booked ? 'badge-secondary' : 'badge-info' }}">
                                             {{ $room->is_booked ? 'Booked' : 'Available' }}
                                         </span>
                                     </td>
                                     <td>
-                                        {{ $room->is_booked ? ($room->bookedBy ? $room->bookedBy->name : 'Nobody') : 'Nobody' }}
+                                        {{ $room->is_booked ? ($room->bookedBy ? $room->bookedBy->name : '-') : '-' }}
                                     </td>
                                     <td>{{ $room->floor }}</td>
                                     <td>{{ $room->max_occupancy }}</td>
@@ -165,7 +173,6 @@
                                     </td>
                                 </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 @endif
@@ -215,5 +222,16 @@
             rows.sort(compare);
             rows.forEach(row => table.appendChild(row));
         }
+
+        document.querySelectorAll('.status-cell').forEach(cell => {
+            cell.addEventListener('click', function() {
+                const roomId = this.getAttribute('data-room-id');
+                const bookedByCell = this.nextElementSibling;
+
+                if (this.innerText.trim() === 'Booked') {
+                    bookedByCell.style.display = bookedByCell.style.display === 'none' ? '' : 'none';
+                }
+            });
+        });
     </script>
 @endsection
