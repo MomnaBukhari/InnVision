@@ -32,7 +32,7 @@
                         const windSpeed = weatherData.wind.speed;
 
                         weatherContainer.innerHTML = `
-                            <p><strong>Temperature:</strong> ${temp} °C</p>
+                            <p><strong>Temperature:</strong> ${temp} F</p>
                             <p><strong>Weather:</strong> ${description}</p>
                             <p><strong>Humidity:</strong> ${humidity}%</p>
                             <p><strong>Wind Speed:</strong> ${windSpeed} m/s</p>
