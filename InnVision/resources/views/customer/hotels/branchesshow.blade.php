@@ -6,6 +6,23 @@
 
 @section('style')
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .table th, .table td {
+            text-align: center;
+        }
+        .badge-info {
+            font-size: 0.9rem;
+        }
+        .table thead th {
+            background-color: #f8f9fa;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn-secondary {
+            cursor: not-allowed;
+        }
+    </style>
 @endsection
 
 @section('section1')
@@ -53,7 +70,7 @@
             </select>
         </div>
 
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Room Number</th>
@@ -63,6 +80,7 @@
                     <th>Floor</th>
                     <th>Fare</th>
                     <th>Facilities</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -74,7 +92,7 @@
                         <td>{{ $room->max_occupancy }}</td>
                         <td>{{ $room->single_beds }}</td>
                         <td>{{ $room->floor }}</td>
-                        <td>{{ $room->fare }}</td>
+                        <td>${{ number_format($room->fare, 2) }}</td>
                         <td>
                             @foreach ($room->facilities as $facility)
                                 <span class="badge badge-info">{{ $facility->name }}</span>
@@ -82,9 +100,16 @@
                         </td>
                         <td>
                             @if (!$room->is_booked)
+                                <span class="badge badge-success">Available</span>
+                            @else
+                                <span class="badge badge-danger">Booked</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if (!$room->is_booked)
                                 <a href="{{ route('book.form', $room->id) }}" class="btn btn-primary">Book Now</a>
                             @else
-                                <button class="btn btn-secondary" disabled>Booked</button>
+                            <a href="{{ route('book.form', $room->id) }}" class="btn btn-secondary">Custom Book</a>
                             @endif
                         </td>
                     </tr>
@@ -137,25 +162,26 @@
                             return A - B;
                         case 'floor_desc':
                             A = parseInt($(a).children('td').eq(4).text());
-                            B = parseInt($(b).children('td').eq(4).text());
-                            return B - A;
-                        case 'fare_asc':
-                            A = parseFloat($(a).children('td').eq(5).text().replace('$', ''));
-                            B = parseFloat($(b).children('td').eq(5).text().replace('$', ''));
-                            return A - B;
-                        case 'fare_desc':
-                            A = parseFloat($(a).children('td').eq(5).text().replace('$', ''));
-                            B = parseFloat($(b).children('td').eq(5).text().replace('$', ''));
-                            return B - A;
-                        default:
-                            return 0;
-                    }
-                });
+                            B = parseInt($(b).children('td').eq(
+                                4).text());
+                               return B - A;
+                           case 'fare_asc':
+                               A = parseFloat($(a).children('td').eq(5).text().replace('$', ''));
+                               B = parseFloat($(b).children('td').eq(5).text().replace('$', ''));
+                               return A - B;
+                           case 'fare_desc':
+                               A = parseFloat($(a).children('td').eq(5).text().replace('$', ''));
+                               B = parseFloat($(b).children('td').eq(5).text().replace('$', ''));
+                               return B - A;
+                           default:
+                               return 0;
+                       }
+                   });
 
-                $.each(rows, function(index, row) {
-                    $('#rooms-table').append(row);
-                });
-            });
-        });
-    </script>
-@endsection
+                   $.each(rows, function(index, row) {
+                       $('#rooms-table').append(row);
+                   });
+               });
+           });
+       </script>
+   @endsection

@@ -56,7 +56,7 @@ class CustomerController extends Controller
         $facilities = Facility::all()->pluck('name', 'id');
 
         // Handle search functionality
-        $query = $branch->rooms()->where('is_booked', false);
+        $query = $branch->rooms(); // Fetch all rooms
 
         if ($request->has('search')) {
             $query->where('room_number', 'like', '%' . $request->input('search') . '%');
@@ -76,6 +76,7 @@ class CustomerController extends Controller
 
         return view('customer.hotels.branchesshow', compact('branch', 'facilities', 'rooms'));
     }
+
 
 
     public function showHotel(Request $request, $id)
@@ -106,16 +107,6 @@ class CustomerController extends Controller
         return view('customer.hotels.show', compact('hotel', 'branches', 'facilities', 'search', 'facility'));
     }
 
-
-    // public function myBookings()
-    // {
-    //     $userId = Auth::id();
-
-    //     // Retrieve rooms where the customer_id matches the authenticated user's ID
-    //     $rooms = Room::where('customer_id', $userId)->with(['branch.hotel', 'facilities'])->get();
-
-    //     return view('customer.rooms.my_bookings', compact('rooms'));
-    // }
     public function myBookings()
     {
         $userId = Auth::id();

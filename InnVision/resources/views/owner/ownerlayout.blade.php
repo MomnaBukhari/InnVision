@@ -24,6 +24,7 @@
             <a href="{{route('owner.hotels.index')}}">Hotels</a>
             <a href="{{route('owner.branches.index')}}">Branches</a>
             <a href="{{route('owner.rooms.index')}}">Rooms</a>
+            <a href="{{route('owner.pending-bookings')}}">Bookings</a>
             <a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

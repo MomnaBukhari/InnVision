@@ -12,6 +12,7 @@ class Booking extends Model
         'room_id',
         'user_id',
         'start_date',
+        'end_date',
         'duration_days',
         'total_price',
 
@@ -21,6 +22,7 @@ class Booking extends Model
     protected $casts = [
         'start_date' => 'datetime', // Cast to Carbon instance
         'total_price' => 'decimal:2', // Ensure total_price is handled as a decimal
+            'end_date',
     ];
     public function room()
     {

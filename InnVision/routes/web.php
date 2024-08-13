@@ -55,7 +55,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('admin/hotels/{hotelId}', [AdminController::class, 'viewHotel'])->name('admin.viewHotel');
     Route::delete('admin/hotels/{hotelId}', [AdminController::class, 'deleteHotel'])->name('admin.deleteHotel');
     Route::delete('/admin/branches/{id}', [AdminController::class, 'deleteBranch'])->name('admin.deleteBranch');
-
 });
 
 // Hotel Owner Routes
@@ -94,6 +93,7 @@ Route::middleware(['auth', 'role:hotel_owner', 'check.approval'])->group(functio
         // Route::get('/hotels/{hotelId}/branches', [RoomController::class, 'getBranches']);
     });
     Route::get('/owner/hotels/{hotelId}/branches', [RoomController::class, 'getBranchesByHotel']);
+        Route::get('/owner/pending-bookings', [BookingController::class, 'showPendingBookings'])->name('owner.pending-bookings');
 
 });
 

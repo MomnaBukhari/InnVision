@@ -102,7 +102,7 @@ class AuthController extends Controller
         if ($otpRecord && $otpRecord->otp == $request->otp) {
             $user = User::find($request->user_id);
             auth()->login($user);
-
+            session(['user' => $user]);
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role === 'hotel_owner') {
